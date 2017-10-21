@@ -1,0 +1,18 @@
+version: '3.3'
+
+services:
+  register:
+    image: gitlab/gitlab-runner:latest
+    entrypoint: gitlab-runner register
+    volumes:
+      - /srv/gitlab-runner/config:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - CI_SERVER_URL=http://gitlab/ci
+      - DOCKER_IMAGE=${RUNNER_DOCKER_IMAGE}
+      - REGISTER_LOCKED=${RUNNER_REGISTER_LOCKED}
+      - REGISTER_NON_INTERACTIVE=true
+      - REGISTER_RUN_UNTAGGED=${RUNNER_REGISTER_RUN_UNTAGGED}
+      - REGISTRATION_TOKEN=${RUNNER_REGISTRATION_TOKEN}
+      - RUNNER_EXECUTOR=${RUNNER_EXECUTOR}
+      - RUNNER_TAG_LIST=${RUNNER_TAG_LIST}
