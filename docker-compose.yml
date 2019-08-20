@@ -2,22 +2,39 @@ version: '3.3'
 
 services:
   gitlab:
-    image: gitlab/gitlab-ce:latest
+    image: gitlab/gitlab-ce:${GITLAB_VERSION:-latest}
     restart: always
-    hostname: gitlab.example.com
+    hostname: ${GITLAB_HOSTNAME}
     environment:
+      GITLAB_ROOT_PASSWORD: ${GITLAB_ROOT_PASSWORD}
       GITLAB_OMNIBUS_CONFIG: |
-        external_url 'http://${DOCKER_MACHINE_IP}'
+        external_url "http://${GITLAB_HOSTNAME}:${GITLAB_HTTP_PORT}"
+        gitlab_rails['gitlab_shell_ssh_port'] = ${GITLAB_SSH_PORT}
     ports:
-      - "80:80"
-      - "443:443"
-      - "2222:22"
+      - "${GITLAB_HTTP_PORT}:${GITLAB_HTTP_PORT}"
+      - "${GITLAB_HTTPS_PORT}:443"
+      - "${GITLAB_SSH_PORT}:22"
     volumes:
-      - /srv/gitlab/config:/etc/gitlab
-      - /srv/gitlab/logs:/var/log/gitlab
-      - /srv/gitlab/data:/var/opt/gitlab
+      - gitlab_config:/etc/gitlab
+      - gitlab_logs:/var/log/gitlab
+      - gitlab_data:/var/opt/gitlab
+
   runner:
-    image: gitlab/gitlab-runner:latest
+    image: gitlab/gitlab-runner:${RUNNER_VERSION:-latest}
+    environment:
+      - CI_SERVER_URL=http://gitlab:${GITLAB_HTTP_PORT}/ci
+      - DOCKER_IMAGE=${RUNNER_DOCKER_IMAGE}
+      - REGISTER_LOCKED=${RUNNER_REGISTER_LOCKED}
+      - REGISTER_NON_INTERACTIVE=true
+      - REGISTER_RUN_UNTAGGED=${RUNNER_REGISTER_RUN_UNTAGGED}
+      - RUNNER_EXECUTOR=${RUNNER_EXECUTOR}
+      - RUNNER_TAG_LIST=${RUNNER_TAG_LIST}
     volumes:
-      - /srv/gitlab-runner/config:/etc/gitlab-runner
+      - runner_config:/etc/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  gitlab_config: {}
+  gitlab_logs: {}
+  gitlab_data: {}
+  runner_config: {}
