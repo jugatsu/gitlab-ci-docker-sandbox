@@ -1,21 +1,16 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
+set -e
 
-# configure shell
-eval $(docker-machine env docker-gitlab)
+export GITLAB_ROOT_PASSWORD="$(openssl rand -base64 8)"
 
-# export variable for docker-machine ip address
-export DOCKER_MACHINE_IP="$(docker-machine ip docker-gitlab)"
-
-# create folders on docker host for using with bind volumes
-docker-machine ssh docker-gitlab sudo mkdir -p /srv/gitlab/{configs,logs,data}
-docker-machine ssh docker-gitlab sudo mkdir -p /srv/gitlab-runner/config
-
-# start gitlab container only
-docker-compose up -d gitlab
+# start containers
+docker-compose up -d 2>/dev/null
 
 echo
-echo '********************************************************************'
-echo "Your Gitlab instance should be reachable at http://$DOCKER_MACHINE_IP"
+echo '*****************************************************************************'
+echo "Your Gitlab instance should be reachable at http://host.docker.internal:8929"
 echo 'Note: it takes about two minutes to make Gitlab ready.'
-echo '********************************************************************'
+echo 'login:    root'
+echo "password: $GITLAB_ROOT_PASSWORD"
+echo '******************************************************************************'
 echo
