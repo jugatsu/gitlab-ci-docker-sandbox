@@ -4,7 +4,7 @@ A Simple sandbox for playing around with [Gitlab](https://about.gitlab.com) CI u
 
 ## Usage
 
-:point_up: Ensure to edit `.env` to meet your environment:
+:point_up: Make sure to edit the `.env` to meet your environment:
 
 ```bash
 $ cp .env.example .env
