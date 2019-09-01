@@ -29,7 +29,7 @@ docker-compose run --rm --entrypoint='gitlab-runner register' \
   -e REGISTRATION_TOKEN=${RUNNER_REGISTRATION_TOKEN} runner
 ```
 
-### Using privileged mode for building docker containers
+### Using privileged mode for building docker images
 
 Your have two options:
 
