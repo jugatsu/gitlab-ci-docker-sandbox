@@ -28,3 +28,26 @@ export RUNNER_REGISTRATION_TOKEN=<TOKEN FROM ABOVE>
 docker-compose run --rm --entrypoint='gitlab-runner register' \
   -e REGISTRATION_TOKEN=${RUNNER_REGISTRATION_TOKEN} runner
 ```
+
+### Using privileged mode for building docker containers
+
+Your have two options:
+
+1. Just set `RUNNER_PRIVILEGED` variable to `true` and you're good to go.
+1. Spin up separate runner `runner-dind`, see below.
+
+#### Start Gitlab and runners
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.dind.yml up -d
+```
+
+#### Register Gitlab runners
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.dind.yml \
+  run --rm --entrypoint='gitlab-runner register' \
+  -e REGISTRATION_TOKEN=${RUNNER_REGISTRATION_TOKEN} runner
+
+docker-compose -f docker-compose.yml -f docker-compose.dind.yml \
+  run --rm --entrypoint='gitlab-runner register' \
+  -e REGISTRATION_TOKEN=${RUNNER_REGISTRATION_TOKEN} runner-dind
+```

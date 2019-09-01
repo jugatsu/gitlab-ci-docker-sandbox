@@ -1,0 +1,20 @@
+version: '3.3'
+
+services:
+  runner-dind:
+    image: gitlab/gitlab-runner:${RUNNER_VERSION:-latest}
+    environment:
+      - CI_SERVER_URL=http://gitlab:${GITLAB_HTTP_PORT}/ci
+      - DOCKER_IMAGE=${RUNNER_DOCKER_IMAGE}
+      - REGISTER_LOCKED=${RUNNER_REGISTER_LOCKED}
+      - REGISTER_NON_INTERACTIVE=true
+      - REGISTER_RUN_UNTAGGED=${RUNNER_REGISTER_RUN_UNTAGGED}
+      - RUNNER_EXECUTOR=${RUNNER_EXECUTOR}
+      - RUNNER_TAG_LIST=docker-dind
+      - DOCKER_PRIVILEGED=true
+    volumes:
+      - runner_dind_config:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  runner_dind_config: {}

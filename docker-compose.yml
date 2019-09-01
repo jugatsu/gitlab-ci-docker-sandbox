@@ -29,6 +29,7 @@ services:
       - REGISTER_RUN_UNTAGGED=${RUNNER_REGISTER_RUN_UNTAGGED}
       - RUNNER_EXECUTOR=${RUNNER_EXECUTOR}
       - RUNNER_TAG_LIST=${RUNNER_TAG_LIST}
+      - DOCKER_PRIVILEGED=${RUNNER_PRIVILEGED}
     volumes:
       - runner_config:/etc/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock
